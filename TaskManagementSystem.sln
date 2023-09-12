@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementSystem.API", "TaskManagementSystem.API\TaskManagementSystem.API.csproj", "{9A1CFEE3-397C-44ED-99D9-8545E4E5E6AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagementSystem.API", "TaskManagementSystem.API\TaskManagementSystem.API.csproj", "{9A1CFEE3-397C-44ED-99D9-8545E4E5E6AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementSystem.Application", "TaskManagementSystem.Application\TaskManagementSystem.Application.csproj", "{59DABE7E-FBD3-451F-A728-82C2EEFC22BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagementSystem.Application", "TaskManagementSystem.Application\TaskManagementSystem.Application.csproj", "{59DABE7E-FBD3-451F-A728-82C2EEFC22BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementSystem.Domain", "TaskManagementSystem.Domain\TaskManagementSystem.Domain.csproj", "{D22CE8B2-002F-41F5-8C9E-6D2A9195149F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagementSystem.Domain", "TaskManagementSystem.Domain\TaskManagementSystem.Domain.csproj", "{D22CE8B2-002F-41F5-8C9E-6D2A9195149F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TaskManagementSystem.Infrastructure", "TaskManagementSystem.Infrastructure\TaskManagementSystem.Infrastructure.csproj", "{FB052AEA-8398-44FB-BB84-6F01EA7C185F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagementSystem.Infrastructure", "TaskManagementSystem.Infrastructure\TaskManagementSystem.Infrastructure.csproj", "{FB052AEA-8398-44FB-BB84-6F01EA7C185F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TaskManagementSystem.UnitTests", "TaskManagementSystem.UnitTest\TaskManagementSystem.UnitTests.csproj", "{E42E919A-AD8D-4348-BAB9-008D648B0C11}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{FB052AEA-8398-44FB-BB84-6F01EA7C185F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB052AEA-8398-44FB-BB84-6F01EA7C185F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB052AEA-8398-44FB-BB84-6F01EA7C185F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E42E919A-AD8D-4348-BAB9-008D648B0C11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42E919A-AD8D-4348-BAB9-008D648B0C11}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42E919A-AD8D-4348-BAB9-008D648B0C11}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42E919A-AD8D-4348-BAB9-008D648B0C11}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

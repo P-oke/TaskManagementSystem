@@ -8,8 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
+using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Domain.Entities;
 using TaskManagementSystem.Infrastructure.Context;
+using TaskManagementSystem.Infrastructure.Implementations;
 
 namespace TaskManagementSystem.API
 {
@@ -137,7 +139,15 @@ namespace TaskManagementSystem.API
         public static void RegisterService(this IServiceCollection services, IConfiguration iConfiguration)
         {
 
+            services.AddTransient<DbContext, ApplicationDbContext>();
 
+            services.AddScoped<IAuthenticationService, AuthenticationService>(); 
+            services.AddScoped<ITaskService, TaskService>(); 
+            services.AddScoped<IProjectService, ProjectService>(); 
+            services.AddScoped<INotificationService, NotificationService>(); 
+            services.AddScoped<IUserService, UserService>(); 
+
+            
 
              services.AddHangfire(configuration => configuration
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
@@ -176,7 +186,8 @@ namespace TaskManagementSystem.API
             });
 
 
-            //RecurringJob.AddOrUpdate<IAuthUserManagement>("CheckLoginPeriod", x => x.CheckLoginPeriod(), "*/10 * * * *");
+            RecurringJob.AddOrUpdate<INotificationService>("SendNotificationForTasksDueDateWithin48Hours", x => x.SendNotificationForTasksDueDateWithin48Hours(), "*/30 * * * *"); //Fires every 30 minutes
+            RecurringJob.AddOrUpdate<INotificationService>("SendNotificationForTasksCompleted", x => x.SendNotificationForTasksCompleted(), Cron.Daily(8)); //Fires at 08:00 UTC
 
         }
 

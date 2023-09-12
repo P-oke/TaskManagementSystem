@@ -19,6 +19,7 @@ builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
 });
 
 builder.Services.ConfigureSwagger();
+builder.Services.ConfigureIdentity();
 builder.Services.RegisterService(builder.Configuration);
 builder.Services.ConfigureJWT(builder.Configuration);
 

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using TaskManagementSystem.Domain.Entities;
 
 namespace TaskManagementSystem.Infrastructure.Context
@@ -17,5 +16,12 @@ namespace TaskManagementSystem.Infrastructure.Context
         {
 
         }
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }  
+        public DbSet<TaskManagementSystem.Domain.Entities.Task> Tasks { get; set; }
+        public DbSet<UserTask> UserTasks { get; set; }
+        public DbSet<Project> Projects { get; set; }
+        public DbSet<Notification> Notifications { get; set; } 
+
     }
 }

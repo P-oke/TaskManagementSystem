@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagementSystem.Domain.Enum;
 
 namespace TaskManagementSystem.Domain.Entities
 {
@@ -12,6 +13,9 @@ namespace TaskManagementSystem.Domain.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public UserType UserType { get; set; }
+        public DateTime CreationTime { get; set; }
+        public List<UserTask> UserTasks { get; set; } = new List<UserTask>();
 
         [NotMapped]
         public string FullName

@@ -4,20 +4,25 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagementSystem.Application.Models.Enums;
 
 namespace TaskManagementSystem.Application.Utils
 {
     public class ResultModel<T>
     {
         public ResultModel() { }
-        public ResultModel(T data, string message = "")
+
+        public ResultModel(T data, string message = "", ApiResponseCode code = ApiResponseCode.OK)
         {
             Data = data;
             Message = message;
+            ApiResponseCode = code;
         }
-        public ResultModel(string errorMessage)
+
+        public ResultModel(string errorMessage, ApiResponseCode code)
         {
             AddError(errorMessage);
+            ApiResponseCode = code;
         }
 
         public ResultModel(List<string> errorMessage)
@@ -38,6 +43,9 @@ namespace TaskManagementSystem.Application.Utils
         public string Message { get; set; }
 
         public T Data { get; set; } = default;
+
+        public ApiResponseCode ApiResponseCode { get; set; } 
+
         public int TotalCount { get; set; }
 
         public string this[string columnName]
