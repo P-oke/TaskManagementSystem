@@ -8,7 +8,6 @@ This is a backend API for a Task Management System that allows users to create, 
 - [Requirements](#requirements)
 - [API Endpoints](#api-endpoints)
 - [Clean Architecture](#clean-architecture)
-- [Domain-Driven Design (Optional)](#domain-driven-design-optional)
 - [SOLID Principles](#solid-principles)
 - [Error Handling](#error-handling)
 - [Database](#database)
@@ -17,7 +16,6 @@ This is a backend API for a Task Management System that allows users to create, 
 - [Local Development](#local-development)
 - [Swagger](#swagger)
 - [Authorization](#authorization)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Requirements
