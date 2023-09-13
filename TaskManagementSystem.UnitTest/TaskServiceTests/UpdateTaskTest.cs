@@ -21,7 +21,6 @@ namespace TaskManagementSystem.UnitTests.TaskServiceTests
         {
             //Arrange
             Guid userId = TestData.userId;
-            Guid taskId = TestData.TaskId;
 
             //Act
 

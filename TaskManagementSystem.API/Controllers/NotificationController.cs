@@ -10,12 +10,19 @@ using TaskManagementSystem.Infrastructure.Implementations;
 
 namespace TaskManagementSystem.API.Controllers
 {
+    /// <summary>
+    /// class notification controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class NotificationController : BaseController
     {
         private readonly INotificationService _notificationService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationController"/> class.
+        /// </summary>
+        /// <param name="notificationService">the notification service</param>
         public NotificationController(INotificationService notificationService)
         {
             _notificationService = notificationService;
@@ -69,9 +76,10 @@ namespace TaskManagementSystem.API.Controllers
         }
 
         /// <summary>
-        /// GET A USER NOTIFICATIONS - PAGINATED
+        /// GET A USER NOTIFICATION - PAGINATED
         /// </summary>
         /// <param name="userId">the userId</param>
+        /// <param name="model">the model</param>
         /// <returns></returns>
         [HttpGet]
         [Route("User/{userId}/Paginated")]
@@ -118,7 +126,7 @@ namespace TaskManagementSystem.API.Controllers
         /// </summary>
         /// <param name="notificationId">the notificationId</param>
         /// <returns></returns>
-        [HttpDelete]
+        [HttpDelete("{notificationId}")]
         [ProducesResponseType(typeof(ResultModel<bool>), 200)]
         public async Task<IActionResult> DeleteNotification(Guid notificationId)
         {
@@ -140,9 +148,9 @@ namespace TaskManagementSystem.API.Controllers
         /// </summary>
         /// <param name="model">the model</param>
         /// <returns></returns>
-        [HttpPut("Mark-As-Read-Or-UnRead/{notificationId}")]
+        [HttpPut("Mark-As-Read-Or-UnRead")]
         [ProducesResponseType(typeof(ResultModel<bool>), 200)]
-        public async Task<IActionResult> MarkAsReadOrUnRead(MarkAsReadDTO model)
+        public async Task<IActionResult> MarkAsReadOrUnRead([FromBody] MarkAsReadDTO model)
         {
             try
             {

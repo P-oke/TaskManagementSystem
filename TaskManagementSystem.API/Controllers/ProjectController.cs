@@ -11,12 +11,19 @@ using TaskManagementSystem.Infrastructure.Implementations;
 
 namespace TaskManagementSystem.API.Controllers
 {
+    /// <summary>
+    /// class project controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ProjectController : BaseController
     {
         private readonly IProjectService _projectService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProjectController"/> class.
+        /// </summary>
+        /// <param name="projectService">the project service</param>
         public ProjectController(IProjectService projectService)
         {
             _projectService = projectService;  
@@ -75,7 +82,7 @@ namespace TaskManagementSystem.API.Controllers
         [HttpDelete]
         [Route("{projectId}")]
         [ProducesResponseType(typeof(ResultModel<bool>), 200)]
-        public async Task<IActionResult> DeleteProject([FromBody] Guid projectId)
+        public async Task<IActionResult> DeleteProject(Guid projectId)
         {
             try
             {
@@ -181,6 +188,7 @@ namespace TaskManagementSystem.API.Controllers
                 return HandleError(ex);
             }
         }
+
         /// <summary>
         /// UPDATE A PROJECT
         /// </summary>

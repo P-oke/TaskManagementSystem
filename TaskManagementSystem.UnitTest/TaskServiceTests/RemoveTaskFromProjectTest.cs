@@ -18,7 +18,7 @@ namespace TaskManagementSystem.UnitTests.TaskServiceTests
         }
 
         [Fact]
-        public async Task AssignTaskToProject_ShouldWork()
+        public async Task RemoveTaskFromProject_ShouldWork() 
         {
             //Arrange
             var userId = TestData.userId;
@@ -30,7 +30,9 @@ namespace TaskManagementSystem.UnitTests.TaskServiceTests
 
             var project = TestData.Project();
             await _fac.Context.Projects.AddAsync(project);
+            task.ProjectId = project.Id;
             await _fac.Context.SaveChangesAsync();
+
 
             var result = await _fac.TaskService.RemoveTaskFromProject(new AssignAndRemoveTaskFromProjectDTO { ProjectId = project.Id, TaskId = task.Id }, userId);
 

@@ -27,7 +27,7 @@ namespace TaskManagementSystem.Application.Models
         {
             get
             {
-                return DateTime.UtcNow;
+                return DateTime.Now;
             }
         }
 
@@ -50,17 +50,15 @@ namespace TaskManagementSystem.Application.Models
             ApiResponseCode codes = ApiResponseCode.OK, int? totalCount = 0, params string[] errors)
         {
             var response = new ApiResponse<T>(data, message, codes, totalCount, errors);
-            response.Description = message ?? response.Code.GetDescription();
+            response.Description = message ?? codes.GetDescription();
+            response.ResponseCode = codes.GetDescription();
+            response.Code = codes;
 
             switch (codes)
             {
                 case ApiResponseCode.CREATED:
                     {
                         return StatusCode(StatusCodes.Status201Created, response); // 201 Created
-                    }
-                case ApiResponseCode.NO_CONTENT:
-                    {
-                        return StatusCode(StatusCodes.Status204NoContent, response); // 204 Created
                     }
                 case ApiResponseCode.INVALID_REQUEST:
                     {
@@ -88,7 +86,7 @@ namespace TaskManagementSystem.Application.Models
             rsp.Code = ApiResponseCode.ERROR;
 #if DEBUG
             rsp.Description = $"Error: {ex?.InnerException?.Message ?? ex.Message} --> {ex?.StackTrace}";
-           return StatusCode(500, rsp);
+            return StatusCode(500, rsp);
 #else
             rsp.Description = customErrorMessage ?? "An error occurred while processing your request!";
             return StatusCode(500, rsp);

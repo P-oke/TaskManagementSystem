@@ -6,6 +6,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using TaskManagementSystem.Application.DTOs.TaskDTOs;
 
 namespace TaskManagementSystem.UnitTests.TaskServiceTests
 {
@@ -15,7 +16,7 @@ namespace TaskManagementSystem.UnitTests.TaskServiceTests
 
         public CreateATaskTest()
         {
-            _fac = new TaskServiceFactory("Database");
+            _fac = new TaskServiceFactory();
                 
         }
 
@@ -27,7 +28,7 @@ namespace TaskManagementSystem.UnitTests.TaskServiceTests
 
             //Act
 
-            var result = await _fac.TaskService.CreateTask(TestData.CreateTaskDTO(), userId);
+            var result = await _fac.TaskService.CreateTask(new CreateTaskDTO { Title = "my task title,", Description = "my task description"}, userId);
 
             //Assert
             Assert.False(result.HasError);

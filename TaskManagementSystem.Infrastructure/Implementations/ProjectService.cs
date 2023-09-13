@@ -38,7 +38,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             }
 
             ProjectDTO projectDTO = project;
-            projectDTO.TaskDTOs = project.Tasks.Select(x => (TaskDTO)x).ToList();
+            projectDTO.TaskDTOs = project.Tasks.OrderByDescending(x => x.CreatedOn).Select(x => (TaskDTO)x).ToList();
 
             return new ResultModel<ProjectDTO>(project, ResponseMessage.SuccessMessage000);
         }
@@ -47,7 +47,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
         {
             var checkProject = await _context.Projects.FirstOrDefaultAsync(x => x.Name.Replace(" ", "").ToLower() == model.Name.Replace(" ", "").ToLower());
 
-            if (checkProject is null)
+            if (checkProject is not null)
             {
                 return new ResultModel<ProjectDTO>(ResponseMessage.ProjectWithNameExist, ApiResponseCode.INVALID_REQUEST);
             }
@@ -60,6 +60,8 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             };
 
             await _context.Projects.AddAsync(newProject);
+            await _context.SaveChangesAsync();
+
             ProjectDTO projectDTO = newProject;
 
             return new ResultModel<ProjectDTO>(projectDTO, ResponseMessage.ProjectSuccessfullyCreated, ApiResponseCode.CREATED);
@@ -75,8 +77,9 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             }
 
             _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
 
-            return new ResultModel<bool>(true, ResponseMessage.ProjectSuccessfullyDeleted, ApiResponseCode.NO_CONTENT);
+            return new ResultModel<bool>(true, ResponseMessage.ProjectSuccessfullyDeleted, ApiResponseCode.OK);
         }
 
         public async Task<ResultModel<List<ProjectDTO>>> GetAllProjects()
@@ -108,11 +111,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
         public async Task<ResultModel<List<ProjectDTO>>> GetAUserProject(Guid userId)
         {
-            var UserTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
+            var userTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
 
-            var userProjects = _context.Tasks.Where(x => UserTasks.Contains(x.Id)).Select(x => x.ProjectId).ToList();
+            var userProjects = _context.Tasks.Where(x => userTasks.Contains(x.Id)).Select(x => x.ProjectId).ToList();
 
-            var projectDTOs = await _context.Projects.Include(x => x.Tasks).Where(x => userProjects.Contains(x.Id)).Select(x => (ProjectDTO)x).ToListAsync();
+            var projectDTOs = await _context.Projects.Include(x => x.Tasks).Where(x => userProjects.Contains(x.Id)).OrderByDescending(x => x.CreatedOn).Select(x => (ProjectDTO)x).ToListAsync();
 
             return new ResultModel<List<ProjectDTO>>(projectDTOs, ResponseMessage.SuccessMessage000, ApiResponseCode.OK);
         }
@@ -123,7 +126,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
             var userProjects = _context.Tasks.Where(x => UserTasks.Contains(x.Id)).Select(x => x.ProjectId).ToList();
 
-            var projectDTOs = await _context.Projects.Include(x => x.Tasks).Where(x => userProjects.Contains(x.Id)).PaginateAsync(model.PageIndex, model.PageSize);
+            var projectDTOs = await _context.Projects.Include(x => x.Tasks).Where(x => userProjects.Contains(x.Id)).OrderByDescending(x => x.CreatedOn).PaginateAsync(model.PageIndex, model.PageSize);
 
             var data = projectDTOs.Select(x => (ProjectDTO)x).ToList();
 
@@ -146,6 +149,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             project.ModifiedBy = userId;
 
             _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
 
             ProjectDTO projectDTO = project;
 

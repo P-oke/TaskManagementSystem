@@ -98,7 +98,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
             await _context.SaveChangesAsync();
 
-            return new ResultModel<bool>(true, ResponseMessage.SuccessfullyDeletedAUser, ApiResponseCode.NO_CONTENT);
+            return new ResultModel<bool>(true, ResponseMessage.SuccessfullyDeletedAUser, ApiResponseCode.OK);
 
         }
     }

@@ -30,6 +30,14 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
+
+app.Use(async (context, next) =>
+{
+    ServiceCollectionExtension.EnrichResponseHeader(context);
+    await next.Invoke();
+});
+
+
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
@@ -37,6 +45,6 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.AddHangfire(builder.Configuration);
-app.MapControllers();
+app.MapControllers().RequireAuthorization();
 
 app.Run();

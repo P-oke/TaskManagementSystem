@@ -10,7 +10,6 @@ namespace TaskManagementSystem.Application.DTOs.TaskDTOs
 {
     public class QueryTaskDTO : BaseSearchViewModel
     {
-        public Guid UserId { get; set; }
         public Priority? Priority { get; set; }
         public Status? Status { get; set; }
     }

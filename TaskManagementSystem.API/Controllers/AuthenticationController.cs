@@ -9,20 +9,32 @@ using TaskManagementSystem.Application.Utils;
 
 namespace TaskManagementSystem.API.Controllers
 {
+    /// <summary>
+    /// class Authentication Controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : BaseController
     {
         private readonly IAuthenticationService _authenticationService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AuthenticationController"/> class.
+        /// </summary>
+        /// <param name="authenticationService">the authenticationService</param>
         public AuthenticationController(IAuthenticationService authenticationService)
         {
             _authenticationService = authenticationService;
 
         }
 
+        /// <summary>
+        /// LOGIN
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <returns></returns>
         [HttpPost]
-        [Route("login")]
+        [Route("Login")]
         [ProducesResponseType(typeof(ResultModel<JwtResponseDTO>), 200)]
         public async Task<IActionResult> Login([FromBody] LoginDTO model)
         {
@@ -39,9 +51,13 @@ namespace TaskManagementSystem.API.Controllers
             }
         }
 
-
+        /// <summary>
+        /// REGISTER
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <returns></returns>
         [HttpPost]
-        [Route("register")]
+        [Route("Register")]
         [ProducesResponseType(typeof(ResultModel<RegisterUserDTO>), 200)]
         public async Task<IActionResult> Register([FromBody] RegisterUserDTO model)
         {
@@ -58,8 +74,13 @@ namespace TaskManagementSystem.API.Controllers
             }
         }
 
+        /// <summary>
+        /// GENERATE REFRESH TOKEN
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <returns></returns>
         [HttpPost]
-        [Route("refresh-token")]
+        [Route("Refresh-Token")]
         [ProducesResponseType(typeof(ResultModel<JwtResponseDTO>), 200)]
         public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenDTO model)
         {

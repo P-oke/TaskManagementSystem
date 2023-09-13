@@ -22,8 +22,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
         public NotificationService(ApplicationDbContext context)
         {
-            _context = context;
-                
+            _context = context;               
         }
 
         public async Task<ResultModel<NotificationDTO>> ANotification(Guid notificationId)
@@ -54,7 +53,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
         {
             var query =  _context.Notifications.Where(x => x.UserId == userId);
 
-            var pagedNotifications = await query.PaginateAsync(model.PageIndex, model.PageSize);
+            var pagedNotifications = await query.OrderByDescending(x => x.CreatedOn).PaginateAsync(model.PageIndex, model.PageSize);
 
             var data = pagedNotifications.Select(x => (NotificationDTO)x).ToList();
 
@@ -64,7 +63,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
         public async Task<ResultModel<NotificationDTO>> CreateNotification(CreateNotificationDTO model, Guid userId)
         {
 
-            var user = _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+            var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
 
             if (user is null)
             {
@@ -97,8 +96,9 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             }
 
             _context.Notifications.Remove(notification);
+            await _context.SaveChangesAsync();
 
-            return new ResultModel<bool>(true, ResponseMessage.NotificationSuccessfullyDeleted, ApiResponseCode.NO_CONTENT);
+            return new ResultModel<bool>(true, ResponseMessage.NotificationSuccessfullyDeleted, ApiResponseCode.OK);
         }
 
         public async Task<ResultModel<bool>> MarkAsReadOrUnRead(MarkAsReadDTO model, Guid userId)

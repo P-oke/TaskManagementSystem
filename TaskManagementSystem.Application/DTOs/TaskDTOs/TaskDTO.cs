@@ -17,6 +17,7 @@ namespace TaskManagementSystem.Application.DTOs.TaskDTOs
         public DateTime DueDate { get; set; }
         public string Priority { get; set; }
         public string Status { get; set; }
+        public DateTime CreatedOn { get; set; }
 
         public static implicit operator TaskDTO(TaskManagementSystem.Domain.Entities.Task model)
         {
@@ -28,6 +29,7 @@ namespace TaskManagementSystem.Application.DTOs.TaskDTOs
                 DueDate = model.DueDate,
                 Priority = model.Priority.GetDescription(),
                 Status = model.Status.GetDescription(),
+                CreatedOn = model.CreatedOn
             };
 
         }
