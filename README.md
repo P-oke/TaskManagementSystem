@@ -1,5 +1,4 @@
 
-```markdown
 # Task Management System API
 
 This is a backend API for a Task Management System that allows users to create, manage, and track tasks and projects, and receive notifications.
