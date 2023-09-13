@@ -25,6 +25,8 @@ namespace TaskManagementSystem.Application.Interfaces
         Task<ResultModel<List<TaskDTO>>> GetAUserTasksForTheCurrentWeek(Guid userId);
         Task<ResultModel<PaginatedList<TaskDTO>>> GetAUserTasksForTheCurrentWeekPaginated(Guid userId, BaseSearchViewModel model);
         Task<ResultModel<bool>> AssignTaskToAUser(Guid taskId, Guid userId);
+        Task<ResultModel<List<TaskDTO>>> GetAllTasks();
+        Task<ResultModel<PaginatedList<TaskDTO>>> GetAllTasks(BaseSearchViewModel model);
 
     }
 }

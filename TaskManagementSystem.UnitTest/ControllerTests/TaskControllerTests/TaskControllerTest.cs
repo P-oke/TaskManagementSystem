@@ -29,7 +29,6 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         public async System.Threading.Tasks.Task GetTask_ShouldWork()
         {
             //Arrange
-            Guid taskId = TestData.TaskId;
 
             // Act
             var task = TestData.Task();
@@ -49,7 +48,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         {
             //Arrange
 
-            var result = await _fac.TaskController.CreateTask(new CreateTaskDTO { Title = "Title", Description = "Description" }) as ObjectResult;
+            var result = await _fac.TaskController.CreateTask(new CreateTaskDTO { Title = "task", Description = "description" }) as ObjectResult;
 
             // Assert
             Assert.NotNull(result);
@@ -70,7 +69,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(204, result.StatusCode);
+            Assert.Equal(200, result.StatusCode);
         }
 
         [Fact]
@@ -180,7 +179,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(204, result.StatusCode);
+            Assert.Equal(200, result.StatusCode);
         }
 
         [Fact]
@@ -197,13 +196,14 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
 
             var project = TestData.Project();
             _fac.Context.Projects.Add(project);
+            task.ProjectId = project.Id;
             _fac.Context.SaveChanges();
 
             var result = await _fac.TaskController.RemoveTaskFromProject(new AssignAndRemoveTaskFromProjectDTO { TaskId = task.Id, ProjectId = project.Id }) as ObjectResult;
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(204, result.StatusCode);
+            Assert.Equal(200, result.StatusCode);
         }
 
         [Fact]
@@ -246,6 +246,44 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
             Assert.Equal(200, result.StatusCode);
         }
 
+        [Fact]
+        public async System.Threading.Tasks.Task GetAllTasks_ShouldWork()  
+        {
+            //Arrange
+
+
+            //Act
+
+            var user = TestData.User();
+            _fac.Context.Users.Add(user);
+            _fac.Context.SaveChanges();
+
+
+            var result = await _fac.TaskController.GetAllTasks() as ObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(200, result.StatusCode);
+        }
+
+        [Fact]
+        public async System.Threading.Tasks.Task GetAllTasksPaginated_ShouldWork()
+        {
+            //Arrange
+
+            //Act
+
+            var user = TestData.User();
+            _fac.Context.Users.Add(user);
+            _fac.Context.SaveChanges();
+
+
+            var result = await _fac.TaskController.GetAllTasks(new BaseSearchViewModel()) as ObjectResult; 
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(200, result.StatusCode);
+        }
 
     }
 }

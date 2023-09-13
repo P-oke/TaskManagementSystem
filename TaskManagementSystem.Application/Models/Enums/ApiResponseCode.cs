@@ -32,9 +32,5 @@ namespace TaskManagementSystem.Application.Models.Enums
         [Description("CREATED")]
         CREATED,
 
-        [Description("NO CONTENT")]
-        NO_CONTENT
-
-
     }
 }

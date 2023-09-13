@@ -39,7 +39,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task CreateTask_ShouldWork()
+        public async System.Threading.Tasks.Task CreateTask_ShouldReturnError() 
         {
             
             //Arrange
@@ -56,7 +56,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task DeleteTask_ShouldWork()
+        public async System.Threading.Tasks.Task DeleteTask_ShouldReturnError()
         {
             
             //Arrange
@@ -74,7 +74,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task GetAUserTask_ShouldWork()
+        public async System.Threading.Tasks.Task GetAUserTask_ShouldReturnError()
         {
 
             //Arrange
@@ -92,7 +92,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task GetAUserTaskPaginated_ShouldWork()
+        public async System.Threading.Tasks.Task GetAUserTaskPaginated_ShouldReturnError()
         {
             
             //Arrange
@@ -110,7 +110,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task GetAUserTaskByStatusOrPriority_ShouldWork()
+        public async System.Threading.Tasks.Task GetAUserTaskByStatusOrPriority_ShouldReturnError()
         {
             //Arrange
 
@@ -127,7 +127,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task GetAUserTaskByStatusOrPriorityPaginated_ShouldWork()
+        public async System.Threading.Tasks.Task GetAUserTaskByStatusOrPriorityPaginated_ShouldReturnError()
         {
             //Arrange
 
@@ -144,7 +144,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task UpdateTask_ShouldWork()
+        public async System.Threading.Tasks.Task UpdateTask_ShouldReturnError()
         {
 
             //Arrange
@@ -162,7 +162,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task AssignTask_ShouldWork()
+        public async System.Threading.Tasks.Task AssignTask_ShouldReturnError()
         {
             //Arrange
 
@@ -180,7 +180,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task RemoveTask_ShouldWork()
+        public async System.Threading.Tasks.Task RemoveTask_ShouldReturnErrork()
         {
             //Arrange
 
@@ -198,7 +198,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task GetAUserTasksForTheCurrentWeek_ShouldWork()
+        public async System.Threading.Tasks.Task GetAUserTasksForTheCurrentWeek_ShouldReturnError()
         {
             //Arrange
 
@@ -216,7 +216,7 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task GetAUserTasksForTheCurrentWeekPaginated_ShouldWork()
+        public async System.Threading.Tasks.Task GetAUserTasksForTheCurrentWeekPaginated_ShouldReturnError()
         {
             //Arrange
 
@@ -226,6 +226,42 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
             _fac.TaskService.Setup(x => x.GetAUserTasksForTheCurrentWeek(It.IsAny<Guid>())).ThrowsAsync(new Exception("An Error Occurred"));
 
             var result = await _fac.TaskController.GetAUserTasksForTheCurrentWeek(It.IsAny<Guid>(), new BaseSearchViewModel()) as ObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(500, result.StatusCode);
+        }
+
+        [Fact]
+        public async System.Threading.Tasks.Task GetAllTasks_ShouldReturnError()
+        {
+            //Arrange
+
+
+            //Act
+
+
+            _fac.TaskService.Setup(x => x.GetAllTasks()).ThrowsAsync(new Exception("An Error Occurred"));
+
+            var result = await _fac.TaskController.GetAllTasks() as ObjectResult;
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(500, result.StatusCode);
+        }
+
+        [Fact]
+        public async System.Threading.Tasks.Task GetAllTasksPaginated_ShouldReturnError() 
+        {
+            //Arrange
+
+
+            //Act
+
+
+            _fac.TaskService.Setup(x => x.GetAllTasks()).ThrowsAsync(new Exception("An Error Occurred"));
+
+            var result = await _fac.TaskController.GetAllTasks() as ObjectResult;
 
             // Assert
             Assert.NotNull(result);

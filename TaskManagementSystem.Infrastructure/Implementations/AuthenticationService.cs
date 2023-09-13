@@ -240,15 +240,14 @@ namespace TaskManagementSystem.Infrastructure.Implementations
                 return new ResultModel<RegisterUserDTO>(ResponseMessage.AccountCreationFailure, ApiResponseCode.INVALID_REQUEST);
             };
 
-            return new ResultModel<RegisterUserDTO>(model, ResponseMessage.AccountCreationSuccess);
+            return new ResultModel<RegisterUserDTO>(model, ResponseMessage.AccountCreationSuccess, ApiResponseCode.CREATED);
         }
 
 
         private ClaimsPrincipal GetPrincipalFromToken(string token)
         {
-            JwtSecurityTokenHandler tokenValidator = new JwtSecurityTokenHandler();
+            JwtSecurityTokenHandler tokenValidator = new();
             var key = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_configuration["JWT:Secret"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var parameters = new TokenValidationParameters
             {

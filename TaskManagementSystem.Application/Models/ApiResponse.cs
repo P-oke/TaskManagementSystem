@@ -55,10 +55,10 @@ namespace TaskManagementSystem.Application.Models
         {
             Payload = data;
             Errors = errors.ToList();
-            if (!errors.Any())
+            /*if (!errors.Any())
                 Code = codes;
             else
-                Code = codes == ApiResponseCode .OK ? ApiResponseCode.ERROR : codes;
+                Code = codes == ApiResponseCode.OK ? ApiResponseCode.ERROR : codes;*/
             Description = message;
             TotalCount = totalCount ?? 0;
         }

@@ -10,6 +10,7 @@ namespace TaskManagementSystem.Application.DTOs.ProjectDTO
 {
     public class ProjectDTO
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime CreatedOn { get; set; }
@@ -20,10 +21,11 @@ namespace TaskManagementSystem.Application.DTOs.ProjectDTO
         {
             return model == null ? null : new ProjectDTO
             {
+                Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
                 CreatedOn = model.CreatedOn,
-                TaskDTOs = model.Tasks.Select(x=> (TaskDTO)x).ToList(),
+                TaskDTOs = model.Tasks.Select(x => (TaskDTO)x).ToList(),
             };
         }
     }

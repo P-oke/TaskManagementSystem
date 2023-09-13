@@ -30,6 +30,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             _jobClient = jobClient;
         }
 
+        /// <summary>
+        /// GET A TASK
+        /// </summary>
+        /// <param name="taskId">the taskId</param>
+        /// <returns>Task&lt;ResultModel&lt;TaskDTO&gt;&gt;</returns>
         public async Task<ResultModel<TaskDTO>> ATask(Guid taskId)
         {
             var task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
@@ -45,6 +50,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
         }
 
+        /// <summary>
+        /// CREATE TASK
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;TaskDTO&gt;&gt;</returns>
         public async Task<ResultModel<TaskDTO>> CreateTask(CreateTaskDTO model, Guid userId)
         {
             var checkTask = await _context.Tasks.FirstOrDefaultAsync(x => x.Title.Replace(" ", "").ToLower() == model.Title.Replace(" ", "").ToLower());
@@ -65,10 +76,25 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             };
 
             await _context.Tasks.AddAsync(newTask);
+
+            var userTask = new UserTask
+            {
+                TaskId = newTask.Id,
+                UserId = userId,
+            };
+
+            await _context.UserTasks.AddAsync(userTask);
+            await _context.SaveChangesAsync();
+
             TaskDTO taskDTO = newTask;
             return new ResultModel<TaskDTO>(taskDTO, ResponseMessage.TaskSuccessfullyCreated, ApiResponseCode.CREATED);
         }
 
+        /// <summary>
+        /// DELETE A TASK
+        /// </summary>
+        /// <param name="taskId">the taskId</param>
+        /// <returns>Task&lt;ResultModel&lt;bool&gt;&gt;</returns>
         public async Task<ResultModel<bool>> DeleteTask(Guid taskId)
         {
             var task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
@@ -79,10 +105,16 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             }
 
             _context.Tasks.Remove(task);
+            await _context.SaveChangesAsync();
 
-            return new ResultModel<bool>(true, ResponseMessage.TaskSuccessfullyDeleted, ApiResponseCode.NO_CONTENT);
+            return new ResultModel<bool>(true, ResponseMessage.TaskSuccessfullyDeleted, ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// GET A USER TASKS
+        /// </summary>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;List&lt;TaskDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<List<TaskDTO>>> GetAUserTasks(Guid userId)
         {
             var getUserTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
@@ -94,6 +126,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             return new ResultModel<List<TaskDTO>>(tasks, ResponseMessage.SuccessMessage000, ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// GET A USER TASK - PAGINATED
+        /// </summary>
+        /// <param name="userId">the userId</param>
+        /// <param name="model">the model</param>
+        /// <returns>Task&lt;ResultModel&lt;PaginatedList&lt;TaskDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<PaginatedList<TaskDTO>>> GetAUserTasks(Guid userId, BaseSearchViewModel model)
         {
             var getUserTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
@@ -102,7 +140,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
             var query = BuildQueryFilter(userTasks, model);
 
-            var paginatedTasks = await query.PaginateAsync(model.PageIndex, model.PageSize);
+            var paginatedTasks = await query.OrderByDescending(x => x.CreatedOn).PaginateAsync(model.PageIndex, model.PageSize);
 
             var data = paginatedTasks.Select(x => (TaskDTO)x).ToList();
 
@@ -123,6 +161,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
         }
 
+        /// <summary>
+        /// GET A USER TASKS BY FILTERING BY PRIORITY OR STATUS
+        /// </summary>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;List&lt;TaskDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<List<TaskDTO>>> GetAUserTasks(Guid userId, QueryTaskDTO model)
         {
             var getUserTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
@@ -159,6 +202,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
         }
 
+        /// <summary>
+        /// GET A USER TASKS BY FILTERING BY  PRIORITY OR STATUS - PAGINATED
+        /// </summary>
+        /// <param name="userId">the userId</param>
+        /// <param name="model">the model</param>
+        /// <returns>Task&lt;ResultModel&lt;PaginatedList&lt;TaskDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<PaginatedList<TaskDTO>>> GetAUserTasksPaginated(Guid userId, QueryTaskDTO model)
         {
             var getUserTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
@@ -167,13 +216,20 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
             var query = BuildQueryFilter(userTasks, model);
 
-            var paginatedTasks = await query.PaginateAsync(model.PageIndex, model.PageSize);
+            var paginatedTasks = await query.OrderByDescending(x => x.CreatedOn).PaginateAsync(model.PageIndex, model.PageSize);
 
             var data = paginatedTasks.Select(x => (TaskDTO)x).ToList();
 
             return new ResultModel<PaginatedList<TaskDTO>>(new PaginatedList<TaskDTO>(data, model.PageIndex, model.PageSize, userTasks.Count()), $"FOUND {data.Count} TASKS", ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// UPDATE A TASK
+        /// </summary>
+        /// <param name="taskId">the taskId</param>
+        /// <param name="model">the model</param>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;TaskDTO&gt;&gt;</returns>
         public async Task<ResultModel<TaskDTO>> UpdateTask(Guid taskId, UpdateTaskDTO model, Guid userId)
         {
             var task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == taskId);
@@ -190,19 +246,26 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             task.Status = model.Status;
 
             _context.Tasks.Update(task);
+            await _context.SaveChangesAsync();
 
             TaskDTO taskDTO = task;
             return new ResultModel<TaskDTO>(taskDTO, ResponseMessage.TaskSuccessfullyCreated, ApiResponseCode.OK);
 
         }
 
+        /// <summary>
+        /// ASSIGN A TASK TO A PROJECT
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;bool&gt;&gt;</returns>
         public async Task<ResultModel<bool>> AssignTaskToAProject(AssignAndRemoveTaskFromProjectDTO model, Guid userId)
         { 
             var task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == model.TaskId);
 
             if (task is null)
             {
-                return new ResultModel<bool>(ResponseMessage.TaskExistWithTitle, ApiResponseCode.NOT_FOUND);
+                return new ResultModel<bool>(ResponseMessage.TaskDoesNotExist, ApiResponseCode.NOT_FOUND);
             }
 
             var project = await _context.Projects.FirstOrDefaultAsync(x => x.Id == model.ProjectId);
@@ -214,7 +277,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
             if (project.Tasks.Any(x => x.Id == model.TaskId))
             {
-                return new ResultModel<bool>(ResponseMessage.TaskAlreadyAssignedToAProject, ApiResponseCode.NOT_FOUND);
+                return new ResultModel<bool>(ResponseMessage.TaskAlreadyAssignedToAProject, ApiResponseCode.INVALID_REQUEST);
             }
 
             task.ProjectId = model.ProjectId;
@@ -223,10 +286,16 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             _context.Tasks.Update(task);
             await _context.SaveChangesAsync();
 
-            return new ResultModel<bool>(true, ResponseMessage.TaskSuccessfullyDeleted, ApiResponseCode.NO_CONTENT);
+            return new ResultModel<bool>(true, ResponseMessage.TaskSuccessfullyAssignedToAProject, ApiResponseCode.OK);
 
         }
 
+        /// <summary>
+        /// REMOVE TASK FROM PROJECT
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;TaskDTO&gt;&gt;</returns>
         public async Task<ResultModel<bool>> RemoveTaskFromProject(AssignAndRemoveTaskFromProjectDTO model, Guid userId) 
         {
             var task = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == model.TaskId);
@@ -243,16 +312,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
                 return new ResultModel<bool>(ResponseMessage.ProjectDoesNotExist, ApiResponseCode.NOT_FOUND);
             }
 
-            if (project.Tasks.Any(x => x.Id == model.TaskId))
-            {
-                return new ResultModel<bool>(ResponseMessage.TaskAlreadyAssignedToAProject, ApiResponseCode.NOT_FOUND);
-            }
-
             var taskAndProject = await _context.Tasks.FirstOrDefaultAsync(x => x.Id == model.TaskId && x.ProjectId == model.ProjectId);
 
-            if (taskAndProject is not null)
+            if (taskAndProject is null)
             {
-                return new ResultModel<bool>(ResponseMessage.TaskDoesNotHaveProject, ApiResponseCode.NOT_FOUND);
+                return new ResultModel<bool>(ResponseMessage.TaskDoesNotHaveProject, ApiResponseCode.INVALID_REQUEST);
             }
 
             task.ProjectId = null;
@@ -261,9 +325,14 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             _context.Tasks.Update(task);
             await _context.SaveChangesAsync();
 
-            return new ResultModel<bool>(true, ResponseMessage.TaskSuccessfullyRemovedFromAProject, ApiResponseCode.NO_CONTENT);
+            return new ResultModel<bool>(true, ResponseMessage.TaskSuccessfullyRemovedFromAProject, ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// GET A USER TASKS FOR CURRENT WEEK 
+        /// </summary>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;&lt;TaskDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<List<TaskDTO>>> GetAUserTasksForTheCurrentWeek(Guid userId)
         {
             var getUserTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
@@ -281,6 +350,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             return new ResultModel<List<TaskDTO>>(tasks, ResponseMessage.SuccessMessage000, ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// GET A USER TASKS FOR THE CURRENT WEEK - PAGINATED
+        /// </summary>
+        /// <param name="userId">the userId</param>
+        /// <param name="model">the model</param>
+        /// <returns>Task&lt;ResultModel&lt;&lt;TaskDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<PaginatedList<TaskDTO>>> GetAUserTasksForTheCurrentWeekPaginated(Guid userId, BaseSearchViewModel model)
         {
             var getUserTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
@@ -291,7 +366,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             DateTime startOfWeek = today.AddDays(-((int)today.DayOfWeek - (int)DayOfWeek.Monday));
             DateTime endOfWeek = startOfWeek.AddDays(6);
 
-            userTasksQuery = userTasksQuery.Where(task => task.DueDate >= startOfWeek && task.DueDate <= endOfWeek);
+            userTasksQuery = userTasksQuery.OrderByDescending(x => x.CreatedOn).Where(task => task.DueDate >= startOfWeek && task.DueDate <= endOfWeek);
 
             var paginatedTasks = await userTasksQuery.PaginateAsync(model.PageIndex, model.PageSize);
 
@@ -300,6 +375,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             return new ResultModel<PaginatedList<TaskDTO>>(new PaginatedList<TaskDTO>(data, model.PageIndex, model.PageSize, userTasksQuery.Count()), $"FOUND {data.Count} TASKS", ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// REMOVE TASK FROM PROJECT
+        /// </summary>
+        /// <param name="taskId">the taskId</param>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;TaskDTO&gt;&gt;</returns>
         public async Task<ResultModel<bool>> AssignTaskToAUser(Guid taskId, Guid userId)
         {
             var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == userId);
@@ -333,8 +414,39 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
             _jobClient.Enqueue<INotificationService>(x => x.CreateNotification(notification, userId));
 
-            return new ResultModel<bool>(true, ResponseMessage.TaskSuccessfullyDeleted, ApiResponseCode.NO_CONTENT);
+            return new ResultModel<bool>(true, ResponseMessage.TaskSuccessfullyDeleted, ApiResponseCode.OK);
 
+        }
+
+        /// <summary>
+        /// GET ALL TASK
+        /// </summary>
+        /// <returns>Task&lt;ResultModel&lt;List&lt;TaskDTO&gt;&gt;&gt;</returns>
+        public async Task<ResultModel<List<TaskDTO>>> GetAllTasks()
+        {
+            var query = _context.Tasks.OrderByDescending(x => x.CreatedOn).AsQueryable();
+
+            var tasks = await query.Select(x => (TaskDTO)x).ToListAsync();
+
+            return new ResultModel<List<TaskDTO>>(tasks, $"SUCCESSFULLY FOUND {tasks.Count} TASKS", ApiResponseCode.OK);
+        }
+
+        /// <summary>
+        /// GET ALL TASK
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <returns>Task&lt;ResultModel&lt;PaginatedList&lt;TaskDTO&gt;&gt;&gt;</returns>
+        public async Task<ResultModel<PaginatedList<TaskDTO>>> GetAllTasks(BaseSearchViewModel model)
+        {
+            var query = _context.Tasks.OrderByDescending(x => x.CreatedOn).AsQueryable();
+
+            query = BuildQueryFilter(query, model);
+
+            var paginatedTasks = await query.PaginateAsync(model.PageIndex, model.PageSize);
+
+            var data = paginatedTasks.Select(x => (TaskDTO)x).ToList();
+
+            return new ResultModel<PaginatedList<TaskDTO>>(new PaginatedList<TaskDTO>(data, model.PageIndex, model.PageSize, query.Count()), $"SUCCESSFULLY FOUND {data.Count} TASKS", ApiResponseCode.OK);
         }
     }
 }

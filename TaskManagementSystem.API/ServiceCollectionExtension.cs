@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Domain.Entities;
@@ -15,8 +16,15 @@ using TaskManagementSystem.Infrastructure.Implementations;
 
 namespace TaskManagementSystem.API
 {
+    /// <summary>
+    /// class Service collection extension
+    /// </summary>
     public static class ServiceCollectionExtension
     {
+        /// <summary>
+        /// CONFIGURE IDENTITY
+        /// </summary>
+        /// <param name="services">the services</param>
         public static void ConfigureIdentity(this IServiceCollection services)
         {
             services.AddIdentity<User, Role>(options =>
@@ -39,6 +47,11 @@ namespace TaskManagementSystem.API
             });
         }
 
+        /// <summary>
+        /// CONFIGURE JWT
+        /// </summary>
+        /// <param name="services">the services collection</param>
+        /// <param name="configuration">the configuration</param>
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtConfig = configuration.GetSection("JWT");
@@ -72,6 +85,10 @@ namespace TaskManagementSystem.API
             });
         }
 
+        /// <summary>
+        /// Configure swagger
+        /// </summary>
+        /// <param name="services">the services</param>
         public static void ConfigureSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
@@ -121,11 +138,20 @@ namespace TaskManagementSystem.API
 
             });
                 c.DescribeAllParametersInCamelCase();
+                // Set the comments path for the Swagger JSON and UI.
+                var xmlFile = $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
             });
         
         
         }
 
+        /// <summary>
+        /// ADD ENTITY FRAMEWORK DATABASE CONTEXT
+        /// </summary>
+        /// <param name="services">the services</param>
+        /// <param name="configuration">the configuration</param>
         public static void AddEntityFrameworkDbContext(this IServiceCollection services, IConfiguration configuration)
         {
             string dbConnectionString = configuration.GetConnectionString("Default");
@@ -136,6 +162,11 @@ namespace TaskManagementSystem.API
                     b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
         }
 
+        /// <summary>
+        /// Register Services
+        /// </summary>
+        /// <param name="services">the services</param>
+        /// <param name="iConfiguration">the configuration</param>
         public static void RegisterService(this IServiceCollection services, IConfiguration iConfiguration)
         {
 
@@ -166,7 +197,11 @@ namespace TaskManagementSystem.API
             services.AddHangfireServer();
         }
 
-
+        /// <summary>
+        /// Add Hangfire
+        /// </summary>
+        /// <param name="builder">the builder</param>
+        /// <param name="configuration">the configuration</param>
         public static void AddHangfire(this IApplicationBuilder builder, IConfiguration configuration)
         {
 
@@ -189,6 +224,20 @@ namespace TaskManagementSystem.API
             RecurringJob.AddOrUpdate<INotificationService>("SendNotificationForTasksDueDateWithin48Hours", x => x.SendNotificationForTasksDueDateWithin48Hours(), "*/30 * * * *"); //Fires every 30 minutes
             RecurringJob.AddOrUpdate<INotificationService>("SendNotificationForTasksCompleted", x => x.SendNotificationForTasksCompleted(), Cron.Daily(8)); //Fires at 08:00 UTC
 
+        }
+
+        /// <summary>
+        /// Enrich Response Header
+        /// </summary>
+        /// <param name="context">the context</param>
+        public static void EnrichResponseHeader(HttpContext context)
+        {
+            context.Response.Headers.Add("Content-Security-Policy", "default-src 'self'; img-src https://*; child-src 'none';");
+            context.Response.Headers.Add("Referrer-Policy", "strict-origin");
+            context.Response.Headers.Add("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+            context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+            context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+            context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
         }
 
 

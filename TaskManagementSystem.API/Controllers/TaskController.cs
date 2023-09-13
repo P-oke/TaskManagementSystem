@@ -8,12 +8,19 @@ using TaskManagementSystem.Application.Utils;
 
 namespace TaskManagementSystem.API.Controllers
 {
+    /// <summary>
+    /// class Task Controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class TaskController : BaseController
     {
         private readonly ITaskService _taskService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TaskController"/> class.
+        /// </summary>
+        /// <param name="taskService">the taskService</param>
         public TaskController(ITaskService taskService)
         {
             _taskService = taskService;
@@ -49,7 +56,6 @@ namespace TaskManagementSystem.API.Controllers
         /// <param name="model">the model</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("{taskId}")]
         [ProducesResponseType(typeof(ResultModel<TaskDTO>), 200)]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskDTO model)
         {
@@ -74,7 +80,7 @@ namespace TaskManagementSystem.API.Controllers
         [HttpDelete]
         [Route("{taskId}")]
         [ProducesResponseType(typeof(ResultModel<bool>), 200)]
-        public async Task<IActionResult> DeleteTask([FromBody] Guid taskId) 
+        public async Task<IActionResult> DeleteTask(Guid taskId) 
         {
             try
             {
@@ -214,7 +220,7 @@ namespace TaskManagementSystem.API.Controllers
         /// <param name="model">the model</param>
         /// <returns></returns>
         [HttpPost]
-        [Route("Assign-Task-To-Project/{taskId}")]
+        [Route("Assign-Task-To-Project")]
         [ProducesResponseType(typeof(ResultModel<bool>), 200)]
         public async Task<IActionResult> AssignTaskToProject([FromBody] AssignAndRemoveTaskFromProjectDTO model)
         {
@@ -237,13 +243,13 @@ namespace TaskManagementSystem.API.Controllers
         /// <param name="model">the model</param>
         /// <returns></returns>
         [HttpPut]
-        [Route("Remove-Task-From-Project/{taskId}")]
+        [Route("Remove-Task-From-Project")]
         [ProducesResponseType(typeof(ResultModel<bool>), 200)]
         public async Task<IActionResult> RemoveTaskFromProject([FromBody] AssignAndRemoveTaskFromProjectDTO model)
         {
             try
             {
-                var result = await _taskService.AssignTaskToAProject(model, UserId);
+                var result = await _taskService.RemoveTaskFromProject(model, UserId);
 
                 return ApiResponse(message: result.Message, codes: result.ApiResponseCode, data: result.Data, errors: result.ErrorMessages.ToArray());
 
@@ -281,6 +287,7 @@ namespace TaskManagementSystem.API.Controllers
         /// GET A USER TASKS FOR CURRENT WEEK - PAGINATED
         /// </summary>
         /// <param name="userId">the userId</param>
+        /// <param name="model">the model</param>
         /// <returns></returns>
         [HttpGet]
         [Route("User-Tasks-For-Current-Week/{userId}/Paginated")]
@@ -299,5 +306,51 @@ namespace TaskManagementSystem.API.Controllers
                 return HandleError(ex);
             }
         }
+
+        /// <summary>
+        /// GET ALL TASKS
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [ProducesResponseType(typeof(ResultModel<List<TaskDTO>>), 200)]
+        public async Task<IActionResult> GetAllTasks()
+        {
+            try
+            {
+                var result = await _taskService.GetAllTasks();
+
+                return ApiResponse(message: result.Message, codes: result.ApiResponseCode, data: result.Data, totalCount: result.Data.Count, errors: result.ErrorMessages.ToArray());
+
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+        /// <summary>
+        /// GET ALL TASKS - PAGINATED
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("Paginated")]
+        [ProducesResponseType(typeof(ResultModel<PaginatedList<TaskDTO>>), 200)]
+        public async Task<IActionResult> GetAllTasks([FromQuery] BaseSearchViewModel model) 
+        {
+            try
+            {
+                var result = await _taskService.GetAllTasks(model);
+
+                return ApiResponse(message: result.Message, codes: result.ApiResponseCode, data: result.Data, totalCount: result.Data.TotalCount, errors: result.ErrorMessages.ToArray());
+
+            }
+            catch (Exception ex)
+            {
+                return HandleError(ex);
+            }
+        }
+
+
     }
 }

@@ -9,12 +9,19 @@ using TaskManagementSystem.Infrastructure.Implementations;
 
 namespace TaskManagementSystem.API.Controllers
 {
+    /// <summary>
+    /// class User Controller
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : BaseController
     {
         private readonly IUserService _userService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserController"/> class.
+        /// </summary>
+        /// <param name="userService">the userService</param>
         public UserController(IUserService userService)
         {
             _userService = userService;
@@ -23,8 +30,6 @@ namespace TaskManagementSystem.API.Controllers
         /// <summary>
         /// ALL USERS
         /// </summary>
-        /// <param name="userId">the userId</param>
-        /// <param name="model">the model</param>
         /// <returns></returns>
         [HttpGet]
         [Route("")]
