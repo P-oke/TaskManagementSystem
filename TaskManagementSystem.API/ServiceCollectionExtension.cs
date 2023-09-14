@@ -31,7 +31,6 @@ namespace TaskManagementSystem.API
             {
                 options.Password.RequiredLength = 6;
                 options.Password.RequireNonAlphanumeric = true;
-                options.SignIn.RequireConfirmedEmail = true;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = true;
                 options.Password.RequireUppercase = true;
@@ -86,7 +85,7 @@ namespace TaskManagementSystem.API
         }
 
         /// <summary>
-        /// Configure swagger
+        /// CONFIGURE SWAGGER
         /// </summary>
         /// <param name="services">the services</param>
         public static void ConfigureSwagger(this IServiceCollection services)
@@ -97,11 +96,11 @@ namespace TaskManagementSystem.API
                 {
                     Title = "Task Management System API",
                     Version = "v1",
-                    Description = "IronClad Platform",
+                    Description = "TMS Platform",
                     Contact = new OpenApiContact
                     {
-                        Name = "IronClad",
-                        Email = "Info@ironclad.com"
+                        Name = "TMS",
+                        Email = "tms@info.com"
                     },
                     License = new OpenApiLicense
                     {
@@ -120,23 +119,23 @@ namespace TaskManagementSystem.API
                     Scheme = "Bearer"
                 });
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
                 {
-                    new OpenApiSecurityScheme
                     {
-                        Reference = new OpenApiReference
+                        new OpenApiSecurityScheme
                         {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
                         },
-                        Scheme = "oauth2",
-                        Name = "Bearer",
-                        In = ParameterLocation.Header,
-                    },
-                    new List<string>()
-                }
+                        new List<string>()
+                    }
 
-            });
+                });
                 c.DescribeAllParametersInCamelCase();
                 // Set the comments path for the Swagger JSON and UI.
                 var xmlFile = $"{Assembly.GetEntryAssembly()?.GetName().Name}.xml";
@@ -163,7 +162,7 @@ namespace TaskManagementSystem.API
         }
 
         /// <summary>
-        /// Register Services
+        /// REGISTER SERVICE
         /// </summary>
         /// <param name="services">the services</param>
         /// <param name="iConfiguration">the configuration</param>
@@ -179,7 +178,6 @@ namespace TaskManagementSystem.API
             services.AddScoped<IUserService, UserService>(); 
 
             
-
              services.AddHangfire(configuration => configuration
             .SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
             .UseSimpleAssemblyNameTypeSerializer()
@@ -198,7 +196,7 @@ namespace TaskManagementSystem.API
         }
 
         /// <summary>
-        /// Add Hangfire
+        /// ADD HANGFIRE
         /// </summary>
         /// <param name="builder">the builder</param>
         /// <param name="configuration">the configuration</param>
@@ -227,7 +225,7 @@ namespace TaskManagementSystem.API
         }
 
         /// <summary>
-        /// Enrich Response Header
+        /// ENRICH RESPONSE HEADER
         /// </summary>
         /// <param name="context">the context</param>
         public static void EnrichResponseHeader(HttpContext context)
@@ -239,7 +237,6 @@ namespace TaskManagementSystem.API
             context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
             context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
         }
-
 
     }
 

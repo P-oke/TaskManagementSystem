@@ -13,7 +13,7 @@ namespace TaskManagementSystem.Application.Interfaces
     public interface IProjectService
     {
         Task<ResultModel<ProjectDTO>> CreateProject(CreateProjectDTO model, Guid userId);
-        Task<ResultModel<ProjectDTO>> UpdateProject(Guid taskId, UpdateProjectDTO model, Guid userId);
+        Task<ResultModel<ProjectDTO>> UpdateProject(Guid projectId, UpdateProjectDTO model, Guid userId);
         Task<ResultModel<bool>> DeleteProject(Guid projectId);
         Task<ResultModel<ProjectDTO>> AProject(Guid projectId);
         Task<ResultModel<List<ProjectDTO>>> GetAllProjects();

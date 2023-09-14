@@ -40,5 +40,42 @@ namespace TaskManagementSystem.UnitTests.TaskServiceTests
             //Assert
             Assert.False(result.HasError);
         }
+
+        [Fact]
+        public async System.Threading.Tasks.Task AssignTaskToUser_ShouldReturnError_WhenTaskDoesNotExist()
+        {
+            //Arrange
+            var taskId = TestData.TaskId;
+
+            //Act
+           
+            var user = TestData.User();
+            await _fac.Context.Users.AddAsync(user);
+            await _fac.Context.SaveChangesAsync();
+
+
+            var result = await _fac.TaskService.AssignTaskToAUser(taskId, user.Id);
+
+            //Assert
+            Assert.True(result.HasError);
+        }
+
+        [Fact]
+        public async System.Threading.Tasks.Task AssignTaskToUser_ShouldReturnError_WhenUserDoesNotExist() 
+        {
+            //Arrange
+            var userId = TestData.userId;
+
+            //Act
+            var task = TestData.Task();
+            await _fac.Context.Tasks.AddAsync(task);
+            await _fac.Context.SaveChangesAsync();
+
+
+            var result = await _fac.TaskService.AssignTaskToAUser(task.Id, userId);
+
+            //Assert
+            Assert.True(result.HasError);
+        }
     }
 }

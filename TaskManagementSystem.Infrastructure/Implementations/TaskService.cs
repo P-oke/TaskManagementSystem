@@ -239,6 +239,13 @@ namespace TaskManagementSystem.Infrastructure.Implementations
                 return new ResultModel<TaskDTO>(ResponseMessage.TaskDoesNotExist, ApiResponseCode.NOT_FOUND);
             }
 
+            var userTasks = _context.UserTasks.Any(x => x.TaskId == taskId && x.UserId == userId);
+
+            if (!userTasks)
+            {
+                return new ResultModel<TaskDTO>(ResponseMessage.TaskDoesNotExistForThisUser, ApiResponseCode.NOT_FOUND);
+            }
+
             task.Title = string.IsNullOrWhiteSpace(model.Title) ? task.Title : model.Title;
             task.Description = string.IsNullOrWhiteSpace(model.Description) ? task.Description : model.Description;
             task.DueDate = model.DueDate;
@@ -406,7 +413,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             var notification = new CreateNotificationDTO
             {
                 NotificationType = NotificationType.New_Task,
-                Message = $"You've been assigned a new task {task.Title}. Check your tasks for details"
+                Message = $"You've been assigned a new task {task.Title}. Check your tasks for details",
             };
 
             await _context.AddAsync(userTask);

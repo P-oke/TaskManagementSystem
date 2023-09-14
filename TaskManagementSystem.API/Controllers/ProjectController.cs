@@ -128,7 +128,7 @@ namespace TaskManagementSystem.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("")]
-        [ProducesResponseType(typeof(ResultModel<ProjectDTO>), 200)]
+        [ProducesResponseType(typeof(ResultModel<List<ProjectDTO>>), 200)]
         public async Task<IActionResult> GetAllProjects()
         {
             try

@@ -9,6 +9,7 @@ namespace TaskManagementSystem.Domain.Enum
     public enum UserType
     {
         ApplicationUser = 1,
+        SuperAdmin
 
     }
 }
