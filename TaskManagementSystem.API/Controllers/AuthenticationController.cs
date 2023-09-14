@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagementSystem.Application.DTOs.AuthDTO;
 using TaskManagementSystem.Application.DTOs.UserDTO;
@@ -12,6 +13,7 @@ namespace TaskManagementSystem.API.Controllers
     /// <summary>
     /// class Authentication Controller
     /// </summary>
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
     public class AuthenticationController : BaseController

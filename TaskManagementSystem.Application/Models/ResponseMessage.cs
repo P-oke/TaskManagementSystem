@@ -41,6 +41,7 @@ namespace TaskManagementSystem.Application.Models
 
 
         public const string TaskDoesNotExist = "TASK DOESN'T EXISTS";
+        public const string TaskDoesNotExistForThisUser = "TASK DOESN'T EXISTS FOR THIS USER";
         public const string TaskSuccessfullyCreated = "TASK SUCCESSFULLY CREATED";
         public const string TaskSuccessfullyUpdated = "TASK SUCCESSFULLY UPDATED";
         public const string TaskExistWithTitle = "TASK WITH THIS TITLE ALREADY EXISTS";

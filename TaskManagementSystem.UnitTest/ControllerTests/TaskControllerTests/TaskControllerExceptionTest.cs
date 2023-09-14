@@ -13,11 +13,11 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
 {
     public class TaskControllerExceptionTest
     {
-        private readonly TaskExceptionControllerFactory _fac;
+        private readonly TaskControllerExceptionFactory _fac;
 
         public TaskControllerExceptionTest()
         {
-            _fac = new TaskExceptionControllerFactory();
+            _fac = new TaskControllerExceptionFactory();
 
         }
 

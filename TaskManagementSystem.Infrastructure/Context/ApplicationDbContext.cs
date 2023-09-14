@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using TaskManagementSystem.Domain.Entities;
 
@@ -21,7 +22,18 @@ namespace TaskManagementSystem.Infrastructure.Context
         public DbSet<TaskManagementSystem.Domain.Entities.Task> Tasks { get; set; }
         public DbSet<UserTask> UserTasks { get; set; }
         public DbSet<Project> Projects { get; set; }
-        public DbSet<Notification> Notifications { get; set; } 
+        public DbSet<Notification> Notifications { get; set; }
+
+
+        /// <summary>
+        /// Called when [model creating].
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
 
     }
 }

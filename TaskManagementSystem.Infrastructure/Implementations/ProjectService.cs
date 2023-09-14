@@ -24,6 +24,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             _context = context;               
         }
 
+        /// <summary>
+        /// A PROJECT
+        /// </summary>
+        /// <param name="projectId">the projectId</param>
+        /// <returns>Task&lt;ResultModel&lt;ProjectDTO&gt;&gt;</returns>
         public async Task<ResultModel<ProjectDTO>> AProject(Guid projectId)
         {
             var project = await _context
@@ -43,6 +48,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             return new ResultModel<ProjectDTO>(project, ResponseMessage.SuccessMessage000);
         }
 
+        /// <summary>
+        /// CREATE A PROJECT
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;ProjectDTO&gt;&gt;</returns>
         public async Task<ResultModel<ProjectDTO>> CreateProject(CreateProjectDTO model, Guid userId)
         {
             var checkProject = await _context.Projects.FirstOrDefaultAsync(x => x.Name.Replace(" ", "").ToLower() == model.Name.Replace(" ", "").ToLower());
@@ -67,6 +78,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             return new ResultModel<ProjectDTO>(projectDTO, ResponseMessage.ProjectSuccessfullyCreated, ApiResponseCode.CREATED);
         }
 
+        /// <summary>
+        /// DELETE A PROJECT
+        /// </summary>
+        /// <param name="projectId">the projectId</param>
+        /// <returns>Task&lt;ResultModel&lt;bool&gt;&gt;</returns>
         public async Task<ResultModel<bool>> DeleteProject(Guid projectId)
         {
             var project = await _context.Projects.FirstOrDefaultAsync(x => x.Id == projectId);
@@ -82,6 +98,10 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             return new ResultModel<bool>(true, ResponseMessage.ProjectSuccessfullyDeleted, ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// GET ALL PROJECTS
+        /// </summary>
+        /// <returns>Task&lt;ResultModel&lt;List&lt;ProjectDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<List<ProjectDTO>>> GetAllProjects()
         {
             var query = _context.Projects
@@ -95,6 +115,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
         }
 
+        /// <summary>
+        /// GET ALL PROJECTS - PAGINATED
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <returns>Task&lt;ResultModel&lt;PaginatedList&lt;ProjectDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<PaginatedList<ProjectDTO>>> GetAllProjects(BaseSearchViewModel model)
         {
             var query = _context.Projects
@@ -109,6 +134,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             return new ResultModel<PaginatedList<ProjectDTO>>(new PaginatedList<ProjectDTO>(data, model.PageIndex, model.PageSize, query.Count()), $"FOUND {data.Count} PROJECTS", ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// GET A USER PROJECT
+        /// </summary>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;List&lt;ProjectDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<List<ProjectDTO>>> GetAUserProject(Guid userId)
         {
             var userTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
@@ -120,6 +150,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             return new ResultModel<List<ProjectDTO>>(projectDTOs, ResponseMessage.SuccessMessage000, ApiResponseCode.OK);
         }
 
+        /// <summary>
+        /// GET A USER PROJECT - PAGINATED
+        /// </summary>
+        /// <param name="userId">the userId</param>
+        /// <param name="model">the model</param>
+        /// <returns>Task&lt;ResultModel&lt;PaginatedList&lt;ProjectDTO&gt;&gt;&gt;</returns>
         public async Task<ResultModel<PaginatedList<ProjectDTO>>> GetAUserProject(Guid userId, BaseSearchViewModel model)
         {
             var UserTasks = _context.UserTasks.Where(x => x.UserId == userId).Select(x => x.TaskId).ToList();
@@ -134,6 +170,13 @@ namespace TaskManagementSystem.Infrastructure.Implementations
 
         }
 
+        /// <summary>
+        /// UPDATE A PROJECT
+        /// </summary>
+        /// <param name="projectId">the projectId</param>
+        /// <param name="model">teh model</param>
+        /// <param name="userId">the userId</param>
+        /// <returns>Task&lt;ResultModel&lt;bool&gt;&gt;</returns>
         public async Task<ResultModel<ProjectDTO>> UpdateProject(Guid projectId, UpdateProjectDTO model, Guid userId)
         {
             var project = await _context.Projects.FirstOrDefaultAsync(x => x.Id == projectId);

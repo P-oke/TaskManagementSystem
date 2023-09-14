@@ -144,13 +144,16 @@ namespace TaskManagementSystem.UnitTests.ControllerTests.TaskControllerTests
         public async System.Threading.Tasks.Task UpdateTask_ShouldWork()
         {
             //Arrange
-
+            var userId = TestData.userId;
 
             //Act
 
             var task = TestData.Task();
             _fac.Context.Tasks.Add(task);
             _fac.Context.SaveChanges();
+
+            _fac.Context.UserTasks.Add(new UserTask { TaskId = task.Id, UserId = userId });
+            await _fac.Context.SaveChangesAsync();
 
             var result = await _fac.TaskController.UpdateTask(task.Id, new UpdateTaskDTO { Title = "Title", Description = "Description" }) as ObjectResult;
 

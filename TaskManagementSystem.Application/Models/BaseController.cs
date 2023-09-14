@@ -76,7 +76,12 @@ namespace TaskManagementSystem.Application.Models
                     return Ok(response); // 200 OK (default)
             }
         }
-
+        /// <summary>
+        /// HANDLE ERROR
+        /// </summary>
+        /// <param name="ex">the exception</param>
+        /// <param name="customErrorMessage">the custom errr message</param>
+        /// <returns>IAction Result</returns>
         protected IActionResult HandleError(Exception ex, string customErrorMessage = null)
         {
 

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using TaskManagementSystem.Application.DTOs.TaskDTOs;
 using TaskManagementSystem.Application.DTOs.UserDTOs;
@@ -6,6 +7,7 @@ using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Application.Models;
 using TaskManagementSystem.Application.Utils;
 using TaskManagementSystem.Infrastructure.Implementations;
+using static TaskManagementSystem.Application.Models.Constant;
 
 namespace TaskManagementSystem.API.Controllers
 {
@@ -102,6 +104,7 @@ namespace TaskManagementSystem.API.Controllers
         /// <param name="userId">the userId</param>
         /// <returns></returns>
         [HttpDelete]
+        [Authorize(Roles = AppRole.SUPERADMIN)]
         [Route("{userId}")]
         [ProducesResponseType(typeof(ResultModel<bool>), 200)]
         public async Task<IActionResult> DeleteUser(Guid userId) 

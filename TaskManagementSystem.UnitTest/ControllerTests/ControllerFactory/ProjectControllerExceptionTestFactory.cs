@@ -1,5 +1,4 @@
-﻿using Hangfire;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using System;
@@ -10,25 +9,24 @@ using System.Threading.Tasks;
 using TaskManagementSystem.API.Controllers;
 using TaskManagementSystem.Application.Interfaces;
 using TaskManagementSystem.Infrastructure.Context;
-using TaskManagementSystem.Infrastructure.Implementations;
 
 namespace TaskManagementSystem.UnitTests.ControllerTests.ControllerFactory
 {
-    public class TaskExceptionControllerFactory
+    public class ProjectControllerExceptionTestFactory
     {
-        public readonly Mock<ITaskService> TaskService = new();
+        public readonly Mock<IProjectService> ProjectService = new();
         public readonly Mock<ApplicationDbContext> Context = new(new DbContextOptionsBuilder<ApplicationDbContext>().Options);
 
-        public TaskExceptionControllerFactory() 
+        public ProjectControllerExceptionTestFactory()
         {
-            
-            TaskController = new TaskController(TaskService.Object);
 
-            TaskController.ControllerContext.HttpContext =
+            ProjectController = new ProjectController(ProjectService.Object); 
+
+            ProjectController.ControllerContext.HttpContext =
               new DefaultHttpContext { User = TestData.GetAuthenticatedUser() };
 
         }
 
-        public TaskController TaskController { get; set; }
+        public ProjectController ProjectController { get; set; }
     }
 }

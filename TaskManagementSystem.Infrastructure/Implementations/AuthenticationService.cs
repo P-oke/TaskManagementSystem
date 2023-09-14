@@ -49,6 +49,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             _logger = logger;            
         }
 
+        /// <summary>
+        /// LOGIN
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <param name="CurrentDateTime">the current DateTime</param>
+        /// <returns>Task&lt;ResultModel&lt;JwtResponseDTO&gt;&gt;</returns>
         public async Task<ResultModel<JwtResponseDTO>> Login(LoginDTO model, DateTime CurrentDateTime)
         {
             var user = await _userManager.FindByEmailAsync(model.EmailAddress);
@@ -152,6 +158,12 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             await _context.SaveChangesAsync();
         }
 
+        /// <summary>
+        /// GENERATES REFRESH TOKEN
+        /// </summary>
+        /// <param name="AccessToken">the access token</param>
+        /// <param name="RefreshToken">the refresh Token</param>
+        /// <returns>Task&lt;ResultModel&lt;JwtResponseDTO&gt;&gt;</returns>
         public async Task<ResultModel<JwtResponseDTO>> RefreshToken(string AccessToken, string RefreshToken)
         {
             ClaimsPrincipal claimsPrincipal = GetPrincipalFromToken(AccessToken);
@@ -196,7 +208,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
                 Token = token,
                 Expiration = expiration,
                 Roles = userRoles,
-                //Permissions = claims.Select(x => x.Value).ToList(),
+                Permissions = userClaims.Select(x => x.Value).ToList(),
                 RefreshToken = refreshToken
             };
 
@@ -218,7 +230,11 @@ namespace TaskManagementSystem.Infrastructure.Implementations
             await _context.SaveChangesAsync();
         }
 
-
+        /// <summary>
+        /// REGISTER USER
+        /// </summary>
+        /// <param name="model">the model</param>
+        /// <returns>Task&lt;ResultModel&lt;RegisterUserDTO&gt;&gt;</returns>
         public async Task<ResultModel<RegisterUserDTO>> Register(RegisterUserDTO model)
         {
             var user = new User
@@ -240,6 +256,7 @@ namespace TaskManagementSystem.Infrastructure.Implementations
                 return new ResultModel<RegisterUserDTO>(ResponseMessage.AccountCreationFailure, ApiResponseCode.INVALID_REQUEST);
             };
 
+            model.Password = string.Empty;
             return new ResultModel<RegisterUserDTO>(model, ResponseMessage.AccountCreationSuccess, ApiResponseCode.CREATED);
         }
 
