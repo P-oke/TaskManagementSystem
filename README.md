@@ -98,6 +98,10 @@ The Hangfire dashboard is accessible at:
 - HTTPS: [https://localhost:7152/job](https://localhost:7152/job)
 - HTTP: [http://localhost:5250/job](http://localhost:5250/job)
 
+The credentials to access the hangfire dashboard is:
+- **Username**: admin
+- **Password**: admin
+
 ## Swagger
 
 The application uses Swagger for API documentation. Access the Swagger UI at:
