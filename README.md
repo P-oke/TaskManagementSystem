@@ -45,15 +45,17 @@ Users receive notifications when:
 
 ### Clean Architecture
 
-The application is structured into relevant layers (e.g., Presentation, Application, Domain, Infrastructure) to ensure separation of concerns.
+The application is structured into relevant layers (Presentation, Application, Domain, Infrastructure) to ensure separation of concerns.
 
 ### SOLID Principles
 
-The application adheres to SOLID principles to showcase object-oriented design understanding.
+The application adheres to SOLID principles to showcase object-oriented design understanding(Inheritance, Encapsulation, Polymorphism;method overloading)
 
 ### Error Handling
 
 Proper error handling is implemented for the API, returning appropriate HTTP status codes and error messages for different types of errors (e.g., validation errors, not found errors).
+This application utilizes [Serilog](https://serilog.net/) as the logging framework. Serilog is a versatile and highly configurable logging library for .NET that provides powerful logging capabilities.
+The application logs are directed to the console and a log file.
 
 ## Database
 
@@ -103,6 +105,12 @@ The application uses Swagger for API documentation. Access the Swagger UI at:
 - HTTPS: [https://localhost:7152/swagger/index.html](https://localhost:7152/swagger/index.html)
 - HTTP: [http://localhost:5250/swagger/index.html](http://localhost:5250/swagger/index.html)
 
+## Superadmin Access
+
+To access the system with superadmin privileges, you can use the following credentials which is created when you apply-migration as in [Database](#database):
+
+- **Email**: superadmin@tms.com
+- **Password**: Dev@1234
 ## Authorization
 
 API endpoints are authorized with JWT tokens. To test endpoints using Swagger, add the JWT token to the "Authorize" section like this: `Bearer your-jwt-token`.
