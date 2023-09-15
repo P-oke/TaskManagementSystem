@@ -190,7 +190,7 @@ namespace TaskManagementSystem.API.Controllers
         }
 
         /// <summary>
-        /// UPDATE A PROJECT
+        /// GET A USER PROJECTS - PAGINATED
         /// </summary>
         /// <param name="userId">the userId</param>
         /// <param name="model">the model</param>

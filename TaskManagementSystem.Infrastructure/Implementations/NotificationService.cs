@@ -138,9 +138,9 @@ namespace TaskManagementSystem.Infrastructure.Implementations
         public async Task<ResultModel<bool>> SendNotificationForTasksCompleted()
         {
 
-            var completedTasks = _context.Tasks
+            var completedTasks = await _context.Tasks
                 .Where(task => task.Status == Status.Completed)
-                .ToList();
+                .ToListAsync();
 
             var notification = new List<Notification>();
 
